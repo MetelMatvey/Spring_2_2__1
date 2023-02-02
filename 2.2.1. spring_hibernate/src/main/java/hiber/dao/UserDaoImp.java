@@ -2,14 +2,15 @@ package hiber.dao;
 
 import hiber.model.User;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
+@Transactional
 public class UserDaoImp implements UserDao {
 
    @Autowired
@@ -28,13 +29,12 @@ public class UserDaoImp implements UserDao {
    }
 
    @Override
-   public User getCarOwner(String model, int series) {
-      String HQLq = "FROM User WHERE  User.car.model = :model AND User.car.series = :series";
-      Query query = sessionFactory.getCurrentSession().createQuery(HQLq);
-             query.setParameter("model", model)
-              .setParameter("series", series);
-      User user = (User) query.getSingleResult();
-      return user;
+   @Transactional
+   public List<User> getCarOwner(String model, int series) {
+      TypedQuery<User> query = sessionFactory.getCurrentSession()
+              .createQuery("FROM User AS u WHERE  u.car.model =:model AND u.car.series =:series");
+      query.setParameter("model", model).setParameter("series", series);
+      return query.getResultList();
    }
 
 }

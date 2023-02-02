@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImp implements UserService {
 
    @Autowired
@@ -27,7 +28,7 @@ public class UserServiceImp implements UserService {
       return userDao.listUsers();
    }
    @Transactional
-   public User getCarOwner(String model, int series) {
+   public List<User> getCarOwner(String model, int series) {
      return userDao.getCarOwner(model, series);
    }
 }
